@@ -182,7 +182,7 @@ $usuario = $resultado->fetch_assoc();
             </div>
         <?php endif; ?>
         
-        <form method="POST" action="procesar_editar.php">
+        <form method="POST" action="update.php">
             <input type="hidden" name="id" value="<?php echo $usuario['id']; ?>">
             
             <div class="form-group">

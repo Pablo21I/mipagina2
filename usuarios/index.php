@@ -13,28 +13,33 @@ $usuarios = [];
 $mensaje = '';
 $tipo_mensaje = '';
 
+if (isset($_SESSION['flash_mensaje']) && isset($_SESSION['flash_tipo'])) {
+    $mensaje = $_SESSION['flash_mensaje'];
+    $tipo_mensaje = $_SESSION['flash_tipo'];
+    unset($_SESSION['flash_mensaje'], $_SESSION['flash_tipo']);
+}
+
 // Obtener todos los usuarios
 $sql = "SELECT id, nombre, correo, es_admin FROM usuarios ORDER BY id DESC";
 $resultado = $conexion->query($sql);
+
+//Valida si el usuario existe al editar, si no existe redirige al index
+if (isset($_GET['id'])) {
+    $id = intval($_GET['id']);
+    $sql_usuario = "SELECT id, nombre, correo, contraseña, es_admin FROM usuarios WHERE id = " . $id;
+    $resultado_usuario = $conexion->query($sql_usuario);
+    
+    if (!$resultado_usuario || $resultado_usuario->num_rows == 0) {
+        header('Location: index.php');
+        exit;
+    }
+}
 
 if ($resultado) {
     $usuarios = $resultado->fetch_all(MYSQLI_ASSOC);
 }
 
-// Procesar eliminación
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'eliminar') {
-    $id = intval($_POST['id']);
-    $sql_eliminar = "DELETE FROM usuarios WHERE id = " . $id;
-    
-    if ($conexion->query($sql_eliminar) === TRUE) {
-        $mensaje = 'Usuario eliminado correctamente.';
-        $tipo_mensaje = 'exito';
-        header("Refresh:1");
-    } else {
-        $mensaje = 'Error al eliminar el usuario.';
-        $tipo_mensaje = 'error';
-    }
-}
+
 
 $conexion->close();
 ?>
@@ -331,7 +336,7 @@ $conexion->close();
                                         <a href="editar.php?id=<?php echo $usuario['id']; ?>" class="btn-accion btn-editar">
                                             <i class="fas fa-edit"></i> Editar
                                         </a>
-                                        <form method="POST" style="display: inline;" onsubmit="return confirm('¿Eliminar este usuario?');">
+                                        <form method="POST" action="eliminar.php" style="display: inline;" onsubmit="return confirm('¿Estás seguro de eliminar este usuario?');">
                                             <input type="hidden" name="action" value="eliminar">
                                             <input type="hidden" name="id" value="<?php echo $usuario['id']; ?>">
                                             <button type="submit" class="btn-accion btn-eliminar">
