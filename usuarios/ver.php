@@ -1,25 +1,24 @@
 <?php
 session_start();
 
-//valida que el usuario haya iniciado sesión, si no redirige al login
 if (!isset($_SESSION['usuario'])) {
-	header("Location: ../login2.php");
+	header('Location: ../login2.php');
 	exit();
 }
-//Valida que se haya proporcionado un ID por GET
+
 require_once __DIR__ . '/../lib/conn.php';
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($id <= 0) {
-	$_SESSION['flash_mensaje'] = 'Usuario no valido';
+	$_SESSION['flash_mensaje'] = 'Usuario no válido';
 	$_SESSION['flash_tipo'] = 'error';
 	header('Location: index.php');
-	exit;
+	exit();
 }
-//Consulta para obtener los detalles del usuario
-$stmt = $conexion->prepare("SELECT id, nombre, correo, es_admin FROM usuarios WHERE id = ?");
-$stmt->bind_param("i", $id);
+
+$stmt = $conexion->prepare('SELECT id, nombre, correo, es_admin FROM usuarios WHERE id = ?');
+$stmt->bind_param('i', $id);
 $stmt->execute();
 $resultado = $stmt->get_result();
 
@@ -27,10 +26,14 @@ if (!$resultado || $resultado->num_rows === 0) {
 	$_SESSION['flash_mensaje'] = 'Usuario no encontrado';
 	$_SESSION['flash_tipo'] = 'error';
 	header('Location: index.php');
-	exit;
+	exit();
 }
 
 $usuario = $resultado->fetch_assoc();
+$stmt->close();
+
+$userName = $_SESSION['user_name'] ?? 'Usuario';
+$currentView = 'usuarios';
 ?>
 
 <!DOCTYPE html>
@@ -38,7 +41,8 @@ $usuario = $resultado->fetch_assoc();
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Ver Usuario</title>
+	<title>Detalle del Usuario</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 	<style>
 		* {
 			margin: 0;
@@ -47,117 +51,194 @@ $usuario = $resultado->fetch_assoc();
 		}
 
 		body {
-			font-family: Arial, sans-serif;
-			background-color: #f4f4f4;
-			padding: 20px;
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			background-color: #f5f5f5;
+			display: flex;
+			flex-direction: column;
+			min-height: 100vh;
 		}
 
-		.container {
-			max-width: 560px;
-			margin: 50px auto;
-			background-color: white;
-			padding: 30px;
-			border-radius: 8px;
-			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+		.header {
+			background-color: #2c3e50;
+			color: white;
+			padding: 15px 30px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 		}
 
-		h1 {
-			color: #333;
-			margin-bottom: 25px;
-			text-align: center;
-		}
+		.header h1 { font-size: 24px; }
 
-		.campo {
-			margin-bottom: 18px;
-		}
+		.user-menu { display: flex; align-items: center; gap: 20px; }
 
-		.campo label {
-			display: block;
-			margin-bottom: 6px;
-			color: #555;
-			font-weight: bold;
-		}
-
-		.valor {
-			width: 100%;
-			padding: 10px;
-			border: 1px solid #ddd;
+		.logout-btn {
+			background-color: #e74c3c;
+			color: white;
+			border: none;
+			padding: 8px 15px;
 			border-radius: 4px;
-			background-color: #f9f9f9;
-			color: #333;
+			cursor: pointer;
+			text-decoration: none;
+			transition: background-color 0.3s;
 		}
 
-		.badge {
-			display: inline-block;
-			padding: 6px 12px;
-			border-radius: 20px;
-			font-size: 12px;
-			font-weight: 600;
-			text-transform: uppercase;
-			letter-spacing: 0.5px;
+		.logout-btn:hover { background-color: #c0392b; }
+
+		.container { display: flex; flex: 1; }
+
+		.sidebar {
+			width: 250px;
+			background-color: #34495e;
+			color: white;
+			padding: 20px 0;
+			box-shadow: 2px 0 5px rgba(0,0,0,0.1);
 		}
 
-		.badge-admin {
-			background: rgba(239, 68, 68, 0.1);
-			color: #ef4444;
-		}
+		.sidebar ul { list-style: none; }
 
-		.badge-usuario {
-			background: rgba(102, 126, 234, 0.1);
-			color: #667eea;
-		}
-
-		.acciones {
-			margin-top: 28px;
-			text-align: center;
-		}
-
-		.btn-volver {
-			display: inline-block;
-			padding: 10px 18px;
-			background-color: #667eea;
+		.sidebar a {
+			display: block;
 			color: white;
 			text-decoration: none;
-			border-radius: 6px;
-			font-weight: bold;
+			padding: 15px 20px;
+			transition: background-color 0.3s, padding-left 0.3s;
+			border-left: 4px solid transparent;
 		}
 
-		.btn-volver:hover {
-			background-color: #5967c8;
+		.sidebar a:hover {
+			background-color: #2c3e50;
+			border-left-color: #3498db;
+			padding-left: 25px;
 		}
+
+		.sidebar a.active {
+			background-color: #2980b9;
+			border-left-color: #3498db;
+		}
+
+		.main-content { flex: 1; padding: 30px; background-color: #f5f5f5; }
+
+		.content-area {
+			background-color: white;
+			padding: 30px;
+			border-radius: 16px;
+			box-shadow: 0 20px 45px rgba(0,0,0,0.08);
+		}
+
+		.content-area h2 {
+			color: #2c3e50;
+			margin-bottom: 25px;
+			border-bottom: 2px solid #3498db;
+			padding-bottom: 10px;
+		}
+
+		.detail-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+			gap: 20px;
+		}
+
+		.detail-field { display: flex; flex-direction: column; gap: 6px; }
+
+		.detail-field label { font-weight: 600; color: #4b5563; }
+
+		.detail-value {
+			padding: 12px;
+			border: 1px solid #e5e7eb;
+			border-radius: 10px;
+			background: #f9fafb;
+		}
+
+		.tipo-badge {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			min-width: 90px;
+			padding: 8px 14px;
+			border-radius: 999px;
+			font-size: 12px;
+			font-weight: 700;
+			letter-spacing: 0.8px;
+		}
+
+		.badge-admin { background: rgba(239, 68, 68, 0.15); color: #dc2626; }
+		.badge-usuario { background: rgba(102, 126, 234, 0.18); color: #4f46e5; }
+
+		.form-actions {
+			display: flex;
+			justify-content: flex-end;
+			margin-top: 30px;
+		}
+
+		.btn-secondary {
+			background: #e5e7eb;
+			color: #374151;
+			border: none;
+			border-radius: 10px;
+			padding: 12px 20px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: transform 0.15s ease, box-shadow 0.15s ease;
+			text-decoration: none;
+		}
+
+		.btn-secondary:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 14px 30px rgba(15,23,42,0.15);
+		}
+
+		.footer {
+			background-color: #2c3e50;
+			color: white;
+			text-align: center;
+			padding: 20px;
+			margin-top: auto;
+			box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+		}
+
+		.footer a { color: #3498db; text-decoration: none; }
 	</style>
 </head>
 <body>
+	<?php include __DIR__ . '/../templates/header.php'; ?>
+
 	<div class="container">
-		<h1>Detalle del Usuario</h1>
+		<?php include __DIR__ . '/../templates/sidebar.php'; ?>
 
-		<div class="campo">
-			<label>ID</label>
-			<div class="valor"><?php echo htmlspecialchars((string)$usuario['id']); ?></div>
-		</div>
+		<main class="main-content">
+			<div class="content-area">
+				<h2>Detalle del Usuario</h2>
+				<div class="detail-grid">
+					<div class="detail-field">
+						<label>ID</label>
+						<div class="detail-value"><?php echo htmlspecialchars((string) $usuario['id']); ?></div>
+					</div>
+					<div class="detail-field">
+						<label>Nombre</label>
+						<div class="detail-value"><?php echo htmlspecialchars($usuario['nombre']); ?></div>
+					</div>
+					<div class="detail-field">
+						<label>Correo</label>
+						<div class="detail-value"><?php echo htmlspecialchars($usuario['correo']); ?></div>
+					</div>
+					<div class="detail-field">
+						<label>Tipo</label>
+						<div class="detail-value">
+							<span class="tipo-badge <?php echo ((int) $usuario['es_admin'] === 1) ? 'badge-admin' : 'badge-usuario'; ?>">
+								<?php echo ((int) $usuario['es_admin'] === 1) ? 'Admin' : 'Usuario'; ?>
+							</span>
+						</div>
+					</div>
+				</div>
 
-		<div class="campo">
-			<label>Nombre</label>
-			<div class="valor"><?php echo htmlspecialchars($usuario['nombre']); ?></div>
-		</div>
-
-		<div class="campo">
-			<label>Correo</label>
-			<div class="valor"><?php echo htmlspecialchars($usuario['correo']); ?></div>
-		</div>
-
-		<div class="campo">
-			<label>Tipo</label>
-			<div class="valor">
-				<span class="badge <?php echo ((int)$usuario['es_admin'] === 1) ? 'badge-admin' : 'badge-usuario'; ?>">
-					<?php echo ((int)$usuario['es_admin'] === 1) ? 'Admin' : 'Usuario'; ?>
-				</span>
+				<div class="form-actions">
+					<a class="btn-secondary" href="index.php">Volver al listado</a>
+				</div>
 			</div>
-		</div>
-
-		<div class="acciones">
-			<a class="btn-volver" href="index.php">Volver al listado</a>
-		</div>
+		</main>
 	</div>
+
+	<?php include __DIR__ . '/../templates/footer.php'; ?>
 </body>
 </html>

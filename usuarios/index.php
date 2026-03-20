@@ -293,7 +293,7 @@ $conexion->close();
 <body>
     <div class="container">
         <div class="header">
-            <h1>👥 Gestión de Usuarios</h1>
+            <h1>👥 Listado de Usuarios</h1>
             <a href="nuevo.php" class="btn-agregar">
                 <i class="fas fa-plus"></i> Agregar Usuario
             </a>
