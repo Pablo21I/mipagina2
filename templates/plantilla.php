@@ -48,6 +48,18 @@ if ($view === 'usuarios') {
         $usuarios = $resultado->fetch_all(MYSQLI_ASSOC);
     }
 }
+
+$clientes = [];
+if ($view === 'clientes') {
+    if (isset($_SESSION['flash_mensaje']) && isset($_SESSION['flash_tipo'])) {
+        $mensaje = $_SESSION['flash_mensaje'];
+        $tipo_mensaje = $_SESSION['flash_tipo'];
+        unset($_SESSION['flash_mensaje'], $_SESSION['flash_tipo']);
+    }
+    $sql_clientes = "SELECT id, nombre, domicilio, giro, razon_social FROM clientes ORDER BY id DESC";
+    $resultado_clientes = $conexion->query($sql_clientes);
+    $clientes = $resultado_clientes ? $resultado_clientes->fetch_all(MYSQLI_ASSOC) : [];
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -567,40 +579,69 @@ if ($view === 'usuarios') {
                     <?php endif; ?>
                 <?php elseif ($view === 'clientes'): ?>
                     <div class="content-header">
-                        <h2>Registro de clientes</h2>
+                        <h2>Listado de Clientes</h2>
+                        <a href="../clientes/nuevo.php" class="btn-agregar">
+                            <i class="fas fa-plus"></i> Agregar Cliente
+                        </a>
                     </div>
 
-                    <?php if ($clientesMensaje): ?>
-                        <div class="mensaje show <?php echo $clientesMensajeTipo === 'error' ? 'error' : 'exito'; ?>">
-                            <?php echo htmlspecialchars($clientesMensaje); ?>
+                    <?php if ($mensaje): ?>
+                        <div class="mensaje show <?php echo $tipo_mensaje; ?>">
+                            <?php echo htmlspecialchars($mensaje); ?>
                         </div>
                     <?php endif; ?>
 
-                    <div class="form-card">
-                        <form action="../clientes/guardar.php" method="POST" class="form-grid">
-                            <div class="form-field">
-                                <label for="nombre">Nombre</label>
-                                <input type="text" name="nombre" id="nombre" placeholder="Ingresa el nombre" required>
-                            </div>
-                            <div class="form-field">
-                                <label for="domicilio">Domicilio</label>
-                                <input type="text" name="domicilio" id="domicilio" placeholder="Ingresa el domicilio" required>
-                            </div>
-                            <div class="form-field">
-                                <label for="giro">Giro</label>
-                                <input type="text" name="giro" id="giro" placeholder="Ingresa el giro" required>
-                            </div>
-                            <div class="form-field">
-                                <label for="razon_social">Razón social</label>
-                                <input type="text" name="razon_social" id="razon_social" placeholder="Ingresa la razón social" required>
-                            </div>
-                            <div class="full-width">
-                                <button type="submit" class="btn-agregar">
-                                    <i class="fas fa-save"></i> Guardar cliente
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                    <?php if (count($clientes) > 0): ?>
+                        <div class="tabla-container">
+                            <table class="usuarios-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Domicilio</th>
+                                        <th>Giro</th>
+                                        <th>Razón Social</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($clientes as $cliente): ?>
+                                        <tr>
+                                            <td><strong>#<?php echo htmlspecialchars($cliente['id']); ?></strong></td>
+                                            <td><?php echo htmlspecialchars($cliente['nombre']); ?></td>
+                                            <td><?php echo htmlspecialchars($cliente['domicilio']); ?></td>
+                                            <td><?php echo htmlspecialchars($cliente['giro']); ?></td>
+                                            <td><?php echo htmlspecialchars($cliente['razon_social']); ?></td>
+                                            <td>
+                                                <div class="acciones">
+                                                    <a href="../clientes/ver.php?id=<?php echo $cliente['id']; ?>" class="btn-accion btn-ver">
+                                                        <i class="fas fa-eye"></i> Ver
+                                                    </a>
+                                                    <a href="../clientes/editar.php?id=<?php echo $cliente['id']; ?>" class="btn-accion btn-editar">
+                                                        <i class="fas fa-edit"></i> Editar
+                                                    </a>
+                                                    <form method="POST" action="../clientes/eliminar.php" style="display: inline;" onsubmit="return confirm('¿Estás seguro de eliminar este cliente?');">
+                                                        <input type="hidden" name="id" value="<?php echo $cliente['id']; ?>">
+                                                        <button type="submit" class="btn-accion btn-eliminar">
+                                                            <i class="fas fa-trash"></i> Eliminar
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php else: ?>
+                        <div class="sin-usuarios">
+                            <i class="fas fa-inbox fa-2x"></i>
+                            <p>No hay clientes registrados aún.</p>
+                            <a href="../clientes/nuevo.php" class="btn-agregar">
+                                <i class="fas fa-plus"></i> Agregar primer cliente
+                            </a>
+                        </div>
+                    <?php endif; ?>
                 <?php else: ?>
                     <div class="dashboard-panel">
                         <h2>Bienvenido al Dashboard</h2>

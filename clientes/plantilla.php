@@ -3,8 +3,8 @@
 session_start();
 //valida que el usuario haya iniciado sesión, si no redirige al login
 if (!isset($_SESSION['usuario'])) {
-    //header("Location: ../login2.php");
-    //exit();
+    header("Location: ../login2.php");
+    exit();
 }
 
 

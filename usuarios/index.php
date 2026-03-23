@@ -82,6 +82,12 @@ $conexion->close();
             flex-wrap: wrap;
             gap: 20px;
         }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
         
         h1 {
             color: #333;
@@ -108,6 +114,16 @@ $conexion->close();
         .btn-agregar:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-seed {
+            background: #1f2937;
+            box-shadow: 0 4px 15px rgba(31, 41, 55, 0.35);
+        }
+
+        .btn-seed:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(31, 41, 55, 0.5);
         }
         
         .mensaje {
@@ -294,9 +310,14 @@ $conexion->close();
     <div class="container">
         <div class="header">
             <h1>👥 Listado de Usuarios</h1>
-            <a href="nuevo.php" class="btn-agregar">
-                <i class="fas fa-plus"></i> Agregar Usuario
-            </a>
+            <div class="header-actions">
+                <a href="seed_admin.php" class="btn-agregar btn-seed">
+                    <i class="fas fa-user-shield"></i> Generar Admin
+                </a>
+                <a href="nuevo.php" class="btn-agregar">
+                    <i class="fas fa-plus"></i> Agregar Usuario
+                </a>
+            </div>
         </div>
         
         <?php if ($mensaje): ?>
