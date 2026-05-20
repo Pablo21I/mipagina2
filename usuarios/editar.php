@@ -6,7 +6,7 @@ if (!isset($_SESSION['usuario'])) {
     exit();
 }
 
-require_once __DIR__ . '/../lib/conn.php';
+require_once __DIR__ . '/../conexion.php';
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id <= 0) {
@@ -17,14 +17,22 @@ if ($id <= 0) {
 $stmt = $conexion->prepare('SELECT id, nombre, correo, es_admin FROM usuarios WHERE id = ?');
 $stmt->bind_param('i', $id);
 $stmt->execute();
-$resultado = $stmt->get_result();
+$stmt->store_result();
 
-if (!$resultado || $resultado->num_rows === 0) {
+if ($stmt->num_rows === 0) {
+    $stmt->close();
     header('Location: index.php');
     exit();
 }
 
-$usuario = $resultado->fetch_assoc();
+$stmt->bind_result($db_id, $db_nombre, $db_correo, $db_es_admin);
+$stmt->fetch();
+$usuario = [
+    'id' => $db_id,
+    'nombre' => $db_nombre,
+    'correo' => $db_correo,
+    'es_admin' => $db_es_admin
+];
 $stmt->close();
 
 $userName = $_SESSION['user_name'] ?? 'Usuario';

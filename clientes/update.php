@@ -24,7 +24,7 @@ if ($id <= 0 || $nombre === '' || $domicilio === '' || $giro === '' || $razon_so
     exit();
 }
 
-require_once __DIR__ . '/../lib/conn.php';
+require_once __DIR__ . '/../conexion.php';
 
 $stmt = $conexion->prepare('UPDATE clientes SET nombre = ?, domicilio = ?, giro = ?, razon_social = ? WHERE id = ?');
 $stmt->bind_param('ssssi', $nombre, $domicilio, $giro, $razon_social, $id);

@@ -1,5 +1,5 @@
 <?php
-// conn.php
+// conexion.php
 declare(strict_types=1);
 
 // Desactivar el reporte de excepciones de mysqli para manejar los errores manualmente
@@ -25,7 +25,7 @@ if ($isLocalhost) {
 }
 
 if ($bd === '') {
-    die('Falta definir el nombre de la base de datos en conn.php');
+    die('Falta definir el nombre de la base de datos en conexion.php');
 }
 
 $conexion = new mysqli($server, $user, $pass, $bd);

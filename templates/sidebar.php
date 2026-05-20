@@ -2,7 +2,7 @@
 $currentView = $currentView ?? '';
 $docRoot = isset($_SERVER['DOCUMENT_ROOT']) ? str_replace('\\', '/', rtrim($_SERVER['DOCUMENT_ROOT'], '/')) : '';
 $projectRoot = str_replace('\\', '/', realpath(__DIR__ . '/..'));
-5$relativeRoot = '';
+$relativeRoot = '';
 
 if ($docRoot && strpos($projectRoot, $docRoot) === 0) {
     $relativeRoot = substr($projectRoot, strlen($docRoot));

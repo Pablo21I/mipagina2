@@ -24,15 +24,24 @@ $nombre_usuario = $_SESSION['usuario'];
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #1e40af;
+            --secondary: #0ea5e9;
+            --accent: #10b981;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --warning: #f59e0b;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f7fa;
+            background-color: var(--light);
             color: #333;
         }
 
         /* HEADER */
         header {
-            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 50%, #01579b 100%);
+            background: linear-gradient(135deg, var(--dark) 0%, #2d3436 100%);
             color: white;
             padding: 15px 30px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -59,10 +68,10 @@ $nombre_usuario = $_SESSION['usuario'];
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            font-weight: 800;
             color: white;
             font-size: 20px;
-            box-shadow: 0 4px 8px rgba(0, 153, 255, 0.3);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         .company-name {
@@ -116,7 +125,7 @@ $nombre_usuario = $_SESSION['usuario'];
         /* SIDEBAR */
         aside {
             width: 250px;
-            background: #1e3a5f;
+            background: var(--dark);
             color: white;
             padding: 25px 0;
             position: fixed;
@@ -154,15 +163,15 @@ $nombre_usuario = $_SESSION['usuario'];
         }
 
         .menu-item:hover {
-            background-color: rgba(70, 130, 180, 0.3);
+            background-color: rgba(30, 64, 175, 0.3);
             color: white;
-            border-left-color: #42a5f5;
+            border-left-color: var(--secondary);
         }
 
         .menu-item.active {
-            background-color: rgba(66, 165, 245, 0.2);
-            color: #42a5f5;
-            border-left-color: #42a5f5;
+            background-color: rgba(30, 64, 175, 0.5);
+            color: white;
+            border-left-color: var(--secondary);
         }
 
         .menu-item i {
@@ -191,7 +200,7 @@ $nombre_usuario = $_SESSION['usuario'];
 
         .content-header h1 {
             font-size: 28px;
-            color: #0d47a1;
+            color: var(--primary);
             margin-bottom: 8px;
         }
 
@@ -225,7 +234,7 @@ $nombre_usuario = $_SESSION['usuario'];
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            border-left: 4px solid #42a5f5;
+            border-left: 4px solid var(--secondary);
         }
 
         .stat-label {
@@ -239,12 +248,12 @@ $nombre_usuario = $_SESSION['usuario'];
         .stat-value {
             font-size: 28px;
             font-weight: 700;
-            color: #0d47a1;
+            color: var(--primary);
         }
 
         /* FOOTER */
         footer {
-            background: #1e3a5f;
+            background: var(--dark);
             color: white;
             text-align: center;
             padding: 20px;
@@ -340,51 +349,33 @@ $nombre_usuario = $_SESSION['usuario'];
                     <i class="fas fa-home"></i>
                     <span>Inicio</span>
                 </a>
-                <a href="#" class="menu-item">
-                    <i class="fas fa-chart-line"></i>
-                    <span>Reportes</span>
-                </a>
             </div>
 
             <div class="menu-section">
-                <div class="menu-title">Gestión</div>
-                <a href="#" class="menu-item">
+                <div class="menu-title">Directorio</div>
+                <a href="clientes/index.php" class="menu-item">
                     <i class="fas fa-users"></i>
-                    <span>Usuarios</span>
+                    <span>Gestión de Clientes</span>
                 </a>
-                <a href="#" class="menu-item">
-                    <i class="fas fa-cogs"></i>
-                    <span>Configuración</span>
+                <?php if (isset($_SESSION['es_admin']) && $_SESSION['es_admin'] == 1): ?>
+                <a href="usuarios/index.php" class="menu-item">
+                    <i class="fas fa-user-shield"></i>
+                    <span>Gestión de Usuarios</span>
                 </a>
-                <a href="#" class="menu-item">
-                    <i class="fas fa-database"></i>
-                    <span>Base de Datos</span>
-                </a>
+                <?php endif; ?>
             </div>
 
             <div class="menu-section">
-                <div class="menu-title">Operaciones</div>
-                <a href="#" class="menu-item">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Documentos</span>
-                </a>
-                <a href="#" class="menu-item">
-                    <i class="fas fa-inbox"></i>
-                    <span>Tareas</span>
-                </a>
-                <a href="#" class="menu-item">
-                    <i class="fas fa-envelope"></i>
-                    <span>Mensajes</span>
+                <div class="menu-title">Inventario</div>
+                <a href="productos_js/index.php" class="menu-item">
+                    <i class="fas fa-box"></i>
+                    <span>Gestión de Productos</span>
                 </a>
             </div>
 
             <div class="menu-section">
                 <div class="menu-title">Cuenta</div>
-                <a href="#" class="menu-item">
-                    <i class="fas fa-user-circle"></i>
-                    <span>Mi Perfil</span>
-                </a>
-                <a href="#" class="menu-item">
+                <a href="logout.php" class="menu-item">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Cerrar Sesión</span>
                 </a>
@@ -422,7 +413,7 @@ $nombre_usuario = $_SESSION['usuario'];
 
                 <!-- CONTENT CARDS -->
                 <div class="card">
-                    <h2 style="color: #0d47a1; margin-bottom: 15px;">Actividad Reciente</h2>
+                    <h2 style="color: var(--primary); margin-bottom: 15px;">Actividad Reciente</h2>
                     <p style="color: #666; line-height: 1.6;">
                         Este es el área principal de trabajo donde puedes mostrar el contenido dinámico de cada sección del menú. 
                         Aquí se pueden cargar diferentes páginas según lo que el usuario seleccione del menú lateral.
@@ -430,13 +421,10 @@ $nombre_usuario = $_SESSION['usuario'];
                 </div>
 
                 <div class="card">
-                    <h2 style="color: #0d47a1; margin-bottom: 15px;">Instrucciones</h2>
+                    <h2 style="color: var(--primary); margin-bottom: 15px;">Módulos de Administración</h2>
                     <ul style="margin-left: 20px; color: #666; line-height: 1.8;">
-                        <li>Modifica el logo en el header con tu imagen de empresa</li>
-                        <li>Cambia "MiEmpresa" por el nombre real de tu empresa</li>
-                        <li>Personaliza los items del menú izquierdo según tus necesidades</li>
-                        <li>Usa esta estructura para cargar contenido dinámico con PHP o JavaScript</li>
-                        <li>Los colores azules se pueden ajustar fácilmente modificando los códigos hexadecimales</li>
+                        <li><strong>Directorio de Clientes:</strong> Administra y organiza tu cartera de clientes y usuarios registrados en la plataforma.</li>
+                        <li><strong>Inventario de Productos:</strong> Gestiona el catálogo de productos disponibles de manera interactiva y en tiempo real.</li>
                     </ul>
                 </div>
             </main>
@@ -449,13 +437,13 @@ $nombre_usuario = $_SESSION['usuario'];
     </div>
 
     <script>
-        // Función para activar items del menú
+        // Marcar el item activo según la URL actual (opcional, pero mejora la experiencia)
+        const currentUrl = window.location.href;
         document.querySelectorAll('.menu-item').forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
+            if(item.href === currentUrl) {
                 document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-                this.classList.add('active');
-            });
+                item.classList.add('active');
+            }
         });
     </script>
 </body>

@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mensaje = 'La contraseña debe tener mínimo 8 caracteres.';
         $tipo_mensaje = 'error';
     } else {
-        require_once __DIR__ . '/../lib/conn.php';
+        require_once __DIR__ . '/../conexion.php';
         if ($conexion) {
             // Verificar si el correo ya existe
             $sql_verificar = "SELECT id FROM usuarios WHERE correo = '" . $conexion->real_escape_string($correo) . "'";

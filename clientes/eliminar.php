@@ -19,7 +19,7 @@ if ($id <= 0) {
     exit();
 }
 
-require_once __DIR__ . '/../lib/conn.php';
+require_once __DIR__ . '/../conexion.php';
 
 $stmt = $conexion->prepare('DELETE FROM clientes WHERE id = ?');
 $stmt->bind_param('i', $id);

@@ -6,7 +6,12 @@ if (!isset($_SESSION['usuario'])) {
     exit();
 }
 
-require_once __DIR__ . '/../lib/conn.php';
+if (isset($_SESSION['es_admin']) && $_SESSION['es_admin'] != 1) {
+    echo "<script>alert('Acceso Denegado: Esta zona es solo para Administradores.'); window.location.href='../dashboard.php';</script>";
+    exit();
+}
+
+require_once __DIR__ . '/../conexion.php';
 
 $clientes = [];
 $mensaje = '';
@@ -44,7 +49,7 @@ $conexion->close();
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #2d3436 100%);
             min-height: 100vh;
             padding: 40px 20px;
         }
@@ -94,7 +99,7 @@ $conexion->close();
         }
 
         .btn-agregar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #2d3436 100%);
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
 
@@ -143,7 +148,7 @@ $conexion->close();
         }
 
         th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #2d3436 100%);
             color: white;
             padding: 18px;
             text-align: left;
@@ -184,7 +189,7 @@ $conexion->close();
 
         .btn-ver {
             background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
+            color: #1e40af;
         }
 
         .btn-editar {
@@ -215,7 +220,7 @@ $conexion->close();
         <div class="header">
             <h1>🏢 Listado de Clientes</h1>
             <div class="header-actions">
-                <a href="../templates/plantilla.php?view=dashboard" class="btn btn-volver">
+                <a href="../dashboard.php" class="btn btn-volver">
                     <i class="fas fa-arrow-left"></i> Dashboard
                 </a>
                 <a href="nuevo.php" class="btn btn-agregar">

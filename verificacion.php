@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("lib/conn.php");
+include("conexion.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = isset($_POST["email"]) ? trim($_POST["email"]) : '';
@@ -20,24 +20,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         $stmt->bind_param("ss", $email, $password_encriptada);
         $stmt->execute();
-        $result = $stmt->get_result();
+        $stmt->store_result(); // Almacenar el resultado para obtener el número de filas de forma compatible
+        
+        $stmt->bind_result($db_id, $db_nombre, $db_correo, $db_es_admin);
 
-        if ($result->num_rows > 0) {
-            $usuario = $result->fetch_assoc();
-            $_SESSION['usuario'] = $usuario['nombre'];
-            $_SESSION['usuario_id'] = $usuario['id'];
-            $_SESSION['usuario_nombre'] = $usuario['nombre'];
-            $_SESSION['usuario_email'] = $usuario['correo'];
-            $_SESSION['es_admin'] = $usuario['es_admin'];
+        if ($stmt->num_rows > 0) {
+            $stmt->fetch();
+            $_SESSION['usuario'] = $db_nombre;
+            $_SESSION['usuario_id'] = $db_id;
+            $_SESSION['usuario_nombre'] = $db_nombre;
+            $_SESSION['usuario_email'] = $db_correo;
+            $_SESSION['es_admin'] = $db_es_admin;
             
+            $stmt->close();
             header("Location: dashboard.php");
             exit();
         } else {
+            $stmt->close();
             echo "<p style='color:red;'>Correo electrónico o contraseña incorrectos.</p>";
             echo "<p><a href='login2.php'>Volver a login</a></p>";
         }
-        
-        $stmt->close();
     }
 } else {
     echo "<p style='color:orange;'>Acceso directo a verificación. Por favor usa el formulario de login.</p>";

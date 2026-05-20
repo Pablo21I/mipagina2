@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -615,6 +616,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Header -->
     <header>
@@ -628,6 +630,9 @@
                     <li><a href="#historia">Historia</a></li>
                     <li><a href="#ubicacion">Ubicación</a></li>
                     <li><a href="#contacto">Contacto</a></li>
+                    <li><a href="login2.php"
+                            style="border: 2px solid var(--accent); padding: 8px 20px; border-radius: 25px; color: var(--accent); font-weight: bold;">Iniciar
+                            Sesión</a></li>
                 </ul>
             </nav>
         </div>
@@ -641,6 +646,21 @@
             <div class="cta-buttons">
                 <a href="#contacto" class="btn btn-primary">Comenzar Ahora</a>
                 <a href="#funcionalidades" class="btn btn-secondary">Saber Más</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Indicadores en tiempo real -->
+    <section
+        style="background: var(--dark); border-bottom: 2px solid rgba(255,255,255,0.1); padding: 15px 0; color: white;">
+        <div class="container" style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
+            <div id="weather-widget"
+                style="background: rgba(255,255,255,0.05); padding: 10px 25px; border-radius: 50px; font-size: 15px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-spinner fa-spin"></i> Cargando clima...
+            </div>
+            <div id="currency-widget"
+                style="background: rgba(255,255,255,0.05); padding: 10px 25px; border-radius: 50px; font-size: 15px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-spinner fa-spin"></i> Cargando tipo de cambio...
             </div>
         </div>
     </section>
@@ -707,12 +727,14 @@
             <h2 class="section-title">Nuestra Historia</h2>
             <div class="historia-contenido">
                 <div class="historia-texto">
-                    <h3>Desde 2020</h3>
-                    <p>Simulex nació con la misión de simplificar el análisis financiero para pequeños y medianos negocios.</p>
-                    <p>Hoy somos la plataforma más confiable para simulaciones de costos y proyecciones de rentabilidad.</p>
+                    <h3>Desde 2025</h3>
+                    <p>Simulex nació con la misión de simplificar el análisis financiero para pequeños y medianos
+                        negocios.</p>
+                    <p>Hoy somos la plataforma más confiable para simulaciones de costos y proyecciones de rentabilidad.
+                    </p>
                 </div>
                 <div class="historia-imagen">
-                    <img src="https://via.placeholder.com/400x300" alt="Historia">
+                    <img src="assets/historia.png" alt="Historia de Simulex">
                 </div>
             </div>
         </div>
@@ -722,22 +744,27 @@
     <section class="ubicacion" id="ubicacion">
         <div class="container">
             <h2 class="section-title">Contacto y Ubicación</h2>
-            <div id="map">Mapa interactivo aquí</div>
+            <div id="map" style="overflow: hidden;">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3729.5092675630403!2d-102.71643302490091!3d20.81113198078436!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842927004cb60a15%3A0xa98ca5767eb4b414!2sTecnol%C3%B3gico%20Superior%20de%20Jalisco!5e0!3m2!1ses-419!2smx!4v1778693156988!5m2!1ses-419!2smx"
+                    width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
             <div class="contacto-grid">
                 <div class="contacto-card">
                     <div class="contacto-icon">📍</div>
                     <h3 class="contacto-titulo">Dirección</h3>
-                    <div class="contacto-info">Calle Principal 123, Ciudad</div>
+                    <div class="contacto-info">47704 Tepatitlán de Morelos, Jal.</div>
                 </div>
                 <div class="contacto-card">
                     <div class="contacto-icon">📞</div>
                     <h3 class="contacto-titulo">Teléfono</h3>
-                    <div class="contacto-info"><a href="tel:+34123456789">+34 123 456 789</a></div>
+                    <div class="contacto-info"><a href="tel:+34123456789">+378 709 2031</a></div>
                 </div>
                 <div class="contacto-card">
                     <div class="contacto-icon">📧</div>
                     <h3 class="contacto-titulo">Email</h3>
-                    <div class="contacto-info"><a href="mailto:info@simulex.com">info@simulex.com</a></div>
+                    <div class="contacto-info"><a href="mailto:simulex@gmail.com">simulex@gmail.com</a></div>
                 </div>
             </div>
         </div>
@@ -795,5 +822,35 @@
             <p>&copy; 2024 Simulex. Todos los derechos reservados.</p>
         </div>
     </footer>
+
+    <!-- Integración de APIs Públicas con Fetch -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Fetch Weather API (Open-Meteo para Tepatitlán)
+            fetch('https://api.open-meteo.com/v1/forecast?latitude=20.8167&longitude=-102.7610&current_weather=true')
+                .then(response => response.json())
+                .then(data => {
+                    const temp = data.current_weather.temperature;
+                    document.getElementById('weather-widget').innerHTML = `<i class="fas fa-cloud-sun" style="color: #f59e0b;"></i> Tepatitlán: <strong>${temp}°C</strong>`;
+                })
+                .catch(error => {
+                    document.getElementById('weather-widget').innerHTML = `<i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i> Clima no disponible`;
+                    console.error("Error al obtener clima:", error);
+                });
+
+            // 2. Fetch Currency API (ExchangeRate-API para USD a MXN)
+            fetch('https://api.exchangerate-api.com/v4/latest/USD')
+                .then(response => response.json())
+                .then(data => {
+                    const mxn = data.rates.MXN.toFixed(2);
+                    document.getElementById('currency-widget').innerHTML = `<i class="fas fa-dollar-sign" style="color: #10b981;"></i> 1 USD = <strong>$${mxn} MXN</strong>`;
+                })
+                .catch(error => {
+                    document.getElementById('currency-widget').innerHTML = `<i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i> Tipo de cambio no disponible`;
+                    console.error("Error al obtener divisas:", error);
+                });
+        });
+    </script>
 </body>
+
 </html>

@@ -8,7 +8,7 @@ if (!isset($_SESSION['usuario'])) {
 }
 
 
-require_once __DIR__ . '/../lib/conn.php';
+require_once __DIR__ . '/../conexion.php';
 
 $allowedViews = ['dashboard', 'clientes', 'usuarios'];
 $view = $_GET['view'] ?? 'dashboard';

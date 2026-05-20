@@ -8,7 +8,7 @@ if (!isset($_SESSION['usuario'])) {
 }
 
 
-require_once __DIR__ . '/../lib/conn.php';
+require_once __DIR__ . '/../conexion.php';
 
 $usuarios = [];
 $mensaje = '';

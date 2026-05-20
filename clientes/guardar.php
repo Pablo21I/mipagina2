@@ -23,7 +23,7 @@ if ($nombre === '' || $domicilio === '' || $giro === '' || $razon_social === '')
     exit();
 }
 
-require_once __DIR__ . '/../lib/conn.php';
+require_once __DIR__ . '/../conexion.php';
 
 $sql = "INSERT INTO clientes (nombre, domicilio, giro, razon_social) VALUES (?, ?, ?, ?)";
 $stmt = $conexion->prepare($sql);

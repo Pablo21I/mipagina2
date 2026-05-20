@@ -6,8 +6,13 @@ if (!isset($_SESSION['usuario'])) {
     exit();
 }
 
+if (isset($_SESSION['es_admin']) && $_SESSION['es_admin'] != 1) {
+    echo "<script>alert('Acceso Denegado: Esta zona es solo para Administradores.'); window.location.href='../dashboard.php';</script>";
+    exit();
+}
 
-require_once __DIR__ . '/../lib/conn.php';
+
+require_once __DIR__ . '/../conexion.php';
 
 $usuarios = [];
 $mensaje = '';
@@ -60,7 +65,7 @@ $conexion->close();
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #2d3436 100%);
             min-height: 100vh;
             padding: 40px 20px;
         }
@@ -100,7 +105,7 @@ $conexion->close();
             align-items: center;
             gap: 8px;
             padding: 12px 24px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #2d3436 100%);
             color: white;
             text-decoration: none;
             border-radius: 10px;
@@ -174,7 +179,7 @@ $conexion->close();
         }
         
         th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #2d3436 100%);
             color: white;
             padding: 18px;
             text-align: left;
@@ -209,7 +214,7 @@ $conexion->close();
         
         .badge-usuario {
             background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
+            color: #1e40af;
         }
         
         .acciones {
@@ -234,7 +239,7 @@ $conexion->close();
         
         .btn-ver {
             background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
+            color: #1e40af;
         }
         
         .btn-ver:hover {
@@ -311,8 +316,8 @@ $conexion->close();
         <div class="header">
             <h1>👥 Listado de Usuarios</h1>
             <div class="header-actions">
-                <a href="seed_admin.php" class="btn-agregar btn-seed">
-                    <i class="fas fa-user-shield"></i> Generar Admin
+                <a href="../dashboard.php" class="btn-agregar btn-seed">
+                    <i class="fas fa-arrow-left"></i> Dashboard
                 </a>
                 <a href="nuevo.php" class="btn-agregar">
                     <i class="fas fa-plus"></i> Agregar Usuario

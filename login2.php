@@ -12,8 +12,17 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
     <style>
+        :root {
+            --primary: #1e40af;
+            --secondary: #0ea5e9;
+            --accent: #10b981;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --warning: #f59e0b;
+        }
+
         body {
-            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 50%, #01579b 100%);
+            background: linear-gradient(135deg, var(--dark) 0%, #2d3436 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -37,7 +46,7 @@
         }
 
         .login-left {
-            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 80%, #01579b 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
             padding: 80px 45px;
             display: flex;
@@ -111,7 +120,7 @@
         }
 
         .input-group-text i {
-            color: #42a5f5;
+            color: var(--primary);
             font-size: 19px;
         }
 
@@ -131,31 +140,31 @@
         }
 
         .input-group:focus-within .input-group-text {
-            border-color: #42a5f5;
+            border-color: var(--secondary);
             background-color: white;
         }
 
         .input-group:focus-within .form-control {
-            border-color: #42a5f5;
-            box-shadow: 0 0 0 3px rgba(66, 165, 245, 0.1);
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
         }
 
         .btn-login {
-            background: linear-gradient(135deg, #0d47a1 0%, #42a5f5 100%);
+            background: var(--primary);
             border: none;
             padding: 15px;
             font-size: 16px;
             font-weight: 600;
             border-radius: 10px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(13, 71, 161, 0.35);
+            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.35);
             letter-spacing: 0.3px;
         }
 
         .btn-login:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(66, 165, 245, 0.5);
-            background: linear-gradient(135deg, #01579b 0%, #0d47a1 100%);
+            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.5);
+            background: var(--dark);
         }
 
         .forgot-password {
@@ -321,7 +330,7 @@
                 <!-- Panel Izquierdo -->
                 <div class="col-md-5 login-left">
                     <i class="bi bi-shield-lock-fill"></i>
-                    <h2>Sistema de Acceso</h2>
+                    <h2 style="font-weight: 800; letter-spacing: -1px; font-size: 38px;">SIMULEX</h2>
                     <p>Plataforma segura y profesional para la gestión de tu cuenta. Accede a todas las funcionalidades de tu sistema.</p>
                 </div>
 
